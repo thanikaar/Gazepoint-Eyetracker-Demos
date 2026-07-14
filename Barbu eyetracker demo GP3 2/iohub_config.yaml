@@ -1,0 +1,313 @@
+monitor_devices:
+    - Display:
+        name: display
+        reporting_unit_type: pix
+        device_number: 1
+        physical_dimensions:
+            width: 725
+            height: 561
+            unit_type: mm
+        default_eye_distance:
+            #surface_center: 550
+            surface_center: 695
+            unit_type: mm
+        psychopy_monitor_name: GazePoint
+
+    - Keyboard:
+        name: kb
+
+    - Mouse:
+        name: mouse
+
+    - Experiment:
+        name: experimentRuntime
+
+# LC EyeGaze Config (uncomment to use)
+#    - eyetracker.hw.lc_technologies.eyegaze.EyeTracker:
+#        enable: True
+#        name: tracker
+#        save_events: True
+#        stream_events: True
+#        device_timer:
+#            interval: 0.002
+#        event_buffer_length: 512
+#        display_camera_image: True
+#        camera_image_screen_position: UPPER_RIGHT
+#        host_connection:
+#            type: LOCAL       
+#        monitor_event_types: [ MonocularEyeSampleEvent, BinocularEyeSampleEvent]
+
+#SMI iView Config (uncomment to use)
+#    - eyetracker.hw.smi.iviewx.EyeTracker:
+#        name: tracker
+#        save_events: True
+#        stream_events: True
+#        event_buffer_length: 1024
+#        monitor_event_types: [ BinocularEyeSampleEvent, FixationStartEvent, FixationEndEvent]
+#        network_settings:
+#            send_ip_address: 169.254.101.116
+#            send_port: 4444
+#            receive_ip_address: 169.254.10.231
+#            receive_port: 5555	            
+#        runtime_settings:
+#            sampling_rate: 250
+#            track_eyes: BINOCULAR_AVERAGED
+#            sample_filtering:
+#                FILTER_ALL: FILTER_OFF            
+#            vog_settings:
+#                pupil_measure_types: PUPIL_DIAMETER
+#        calibration:
+#            type: NINE_POINTS
+#            auto_pace: Yes
+#            pacing_speed: SLOW
+#            screen_background_color: 125
+#            target_type: CIRCLE_TARGET
+#            target_attributes:
+#                target_size: 30
+#                target_color: 239
+#                target_inner_color: RED
+#            show_validation_accuracy_window: False
+#        model_name: RED
+
+# SRR EyeLink Config (uncomment to use)
+#    - eyetracker.hw.sr_research.eyelink.EyeTracker:
+#        name: tracker
+#        save_events: True
+#        stream_events: True
+#        device_timer:
+#            interval: 0.001
+#        monitor_event_types: [ MonocularEyeSampleEvent, BinocularEyeSampleEvent, FixationStartEvent, FixationEndEvent, SaccadeStartEvent, SaccadeEndEvent, BlinkStartEvent, BlinkEndEvent]
+#        simulation_mode: False
+#        enable_interface_without_connection: False
+#        network_settings: 100.1.1.1
+#        default_native_data_file_name: et_data
+#        runtime_settings:
+#            sampling_rate: 500
+#            track_eyes: BINOCULAR
+#            sample_filtering:
+#                FILTER_ONLINE: FILTER_OFF
+#            vog_settings:
+#                pupil_measure_types: PUPIL_AREA
+#                tracking_mode: PUPIL_CR_TRACKING
+#                pupil_center_algorithm: CENTROID_FIT
+#        calibration:
+#            type: NINE_POINTS
+#            auto_pace: True
+#            pacing_speed: 1.5
+#            screen_background_color: [128,128,128]
+#            target_type: CIRCLE_TARGET
+#            target_attributes:
+#                # outer_diameter and inner_diameter are specified in pixels
+#                outer_diameter: 33
+#                inner_diameter: 6
+#                outer_color: [255,255,255]
+#                inner_color: [0,0,0]
+#        model_name: EYELINK 1000 TOWER
+
+    - eyetracker.hw.gazepoint.gp3.EyeTracker:
+        # Indicates if the device should actually be loaded at experiment runtime.
+        enable: True
+
+        # The variable name of the device that will be used to access the ioHub Device class
+        # during experiment run-time, via the devices.[name] attribute of the ioHub
+        # connection or experiment runtime class.
+        name: tracker
+
+        # Should eye tracker events be saved to the ioHub DataStore file when the device
+        # is recording data ?
+        save_events: True
+
+        # Should eye tracker events be sent to the Experiment process when the device
+        # is recording data ?
+        stream_events: True
+
+        # How many eye events (including samples) should be saved in the ioHub event buffer before
+        # old eye events start being replaced by new events. When the event buffer reaches
+        # the maximum event length of the buffer defined here, older events will start to be dropped.
+        event_buffer_length: 1024
+
+        # The GP3 implementation of the common eye tracker interface supports the
+        # BinocularEyeSampleEvent event type.
+        monitor_event_types: [BinocularEyeSampleEvent, FixationStartEvent, FixationEndEvent]
+
+        device_timer:
+            interval: 0.005
+
+        calibration:
+            # True: Use GazePoint Control app calibration window.
+            # False: Use custom calibration graphics.
+            use_builtin: True
+
+            # auto_pace: Ggazepoint only supports auto pacing,so it automatically progresses from
+            # one calibration point to the next.
+            #
+            auto_pace: True
+
+            # target_duration is the number of sec.msec that a calibration point should
+            # be displayed before moving onto the next point. Target size expansion / contraction
+            # optionally occurs during this time period as well.
+            # (Sets the GP3 CALIBRATE_TIMEOUT)
+            target_duration: 1.5
+
+            # target_delay specifies the time between target position presentations. Target position animation
+            # optionally occurs during this time period as well.
+            # (Sets the GP3 CALIBRATE_DELAY)
+            target_delay: 0.75
+
+            #
+            # Remaining calibration settings are only used if 'use_builtin' == False
+            #
+            # Number of calibration points to present.
+            # THREE_POINTS,FIVE_POINTS,NINE_POINTS
+            type: FIVE_POINTS
+
+            # color_type: rgb, rgb255, named, hex, etc. Leave blank to use window's color space.
+            color_type: rgb255
+
+            # unit_type: norm, pix, height, deg, etc. Leave blank to use window's unit type.
+            unit_type:
+
+            # Should the target positions be randomized?
+            randomize: True
+
+            # screen_background_color specifies the r,g,b background color to
+            # set the calibration, validation, etc, screens to.
+            screen_background_color: [128,128,128]
+
+            # text_color specifies the foreground color of any text used during calibration.
+            # If empty, text_color is calculated automatically based on screen_background_color.
+            text_color:
+
+            # target_type: Defines what form of calibration graphic should be used
+            # during calibration, validation, etc. Valid options are CIRCLE_TARGET, or CUSTOM.
+            target_type: CIRCLE_TARGET
+
+            # The associated target attribute properties can be supplied
+            # for the given target_type.
+            target_attributes:
+                 # outer_diameter: The size of the outer circle of the calibration target
+                 outer_diameter: 40.0
+
+                 # outer_stroke_width: The thickness of the outer circle edge.
+                 outer_stroke_width: 2.0
+
+                 # outer_fill_color: color to use to fill the outer circle.
+                 outer_fill_color: [64,64,64]
+
+                 # outer_line_color: color to used for the outer circle edge.
+                 outer_line_color: [255,255,255]
+
+                 # inner_diameter: The size of the inner circle calibration target
+                 inner_diameter: 15.0
+
+                 # inner_stroke_width: The thickness of the inner circle edge.
+                 inner_stroke_width: 1.0
+
+                 # inner_fill_color: color to use to fill the inner circle.
+                 inner_fill_color: [0,255,0]
+
+                 # inner_line_color: color to used for the inner circle edge.
+                 inner_line_color: [0,0,0]
+
+                 # 'animate' controls target movement and expansion / contraction (if any).
+                 animate:
+                     # enable: True if the calibration target should be animated between target positions.
+                     # False specifies that the calibration targets could just jump from one calibration point to another.
+                     enable: True
+
+                     # expansion_ratio: If > 1.0, expansion_ratio specifies the maximum target
+                     # outer diameter size as outer_diameter * expansion_ratio.
+                     expansion_ratio: 1.25
+
+                     # contract_only: If True, only contract outer target circle into inner target circle;
+                     # expansion_ratio is ignored. If False, expand and then contract target using expansion_ratio setting.
+                     contract_only: False
+            
+        
+        # The model name of the device.
+        model_name: GP3
+
+        # The serial number of the GP3 device.
+        serial_number: xxxx
+
+        # manufacturer_name is used to store the name of the maker of the eye tracking
+        # device. This is for informational purposes only.
+        manufacturer_name: GazePoint
+#    - eyetracker.hw.tobii.EyeTracker:
+        # Indicates if the device should actually be loaded at experiment runtime.
+        #enable: True
+
+        # The variable name of the device that will be used to access the ioHub Device class
+        # during experiment run-time, via the devices.[name] attribute of the ioHub
+        # connection or experiment runtime class.
+        #name: tracker
+
+        # The model name of the Tobii device that you wish to connect to can be specified here,
+        # and only Tobii systems matching that model name will be considered as possible candidates for connection.
+        # If you only have one Tobii system connected to the computer, this field can just be left empty.
+        #model_name:
+
+        # The serial number of the Tobii device that you wish to connect to can be specified here,
+        # and only the Tobii system matching that serial number will be connected to, if found.
+        # If you only have one Tobii system connected to the computer, this field can just be left empty,
+        # in which case the first Tobii device found will be connected to.
+        #serial_number:
+
+        #calibration:
+            # The Tobii ioHub Common Eye Tracker Interface currently support 
+            # a 3, 5 and 9 point calibration mode.
+            # THREE_POINTS,FIVE_POINTS,NINE_POINTS
+            #type: NINE_POINTS
+
+            # Should the target positions be randomized?
+            #randomize: True
+
+            # auto_pace can be True or False. If True, the eye tracker will 
+            # automatically progress from one calibration point to the next.
+            # If False, a manual key or button press is needed to progress to
+            # the next point.
+            #auto_pace: True
+            
+            # pacing_speed is the number of sec.msec that a calibration point should
+            # be displayed before moving onto the next point when auto_pace is set to true.
+            # If auto_pace is False, pacing_speed is ignored.
+            #pacing_speed: 1.5
+            
+            # screen_background_color specifies the r,g,b background color to 
+            # set the calibration, validation, etc, screens to. Each element of the color
+            # should be a value between 0 and 255. 0 == black, 255 == white.
+            #screen_background_color: [128,128,128]
+            
+            # Target type defines what form of calibration graphic should be used
+            # during calibration, validation, etc. modes.
+            # Currently the Tobii implementation supports the following
+            # target type: CIRCLE_TARGET. 
+            # To do: Add support for other types, etc.
+            #target_type: CIRCLE_TARGET
+            
+            # The associated target attribute properties can be supplied
+            # for the given target_type. 
+            #target_attributes:
+                 #outer_diameter: 35
+                 #outer_stroke_width: 2
+                 #outer_fill_color: [255,0,0]
+                 #outer_line_color: [255,0,0]
+                 #inner_diameter: 7
+                 #inner_stroke_width: 1
+                 #inner_color: [0,0,0]
+                 #inner_fill_color: [0,0,0]
+                 #inner_line_color: [0,0,0]
+                 #animate:
+                     #enable: True
+                     #movement_velocity: 600.0  # 500 pix / sec
+                     #expansion_ratio: 3.0  # expands to 3 x the starting size
+                     #expansion_speed: 30.0  # exapands at 30.0 pix / sec
+                     #contract_only: True        
+        #runtime_settings:
+            # The supported sampling rates for Tobii are model dependent. 
+            # Using a defualt of 60 Hz, with the assumption it is the most common.
+            #sampling_rate: 120
+
+
+data_store:
+    enable: True
