@@ -131,7 +131,13 @@ class ViennaFestival(Experiment):
             kb = keyboard.Keyboard()
 
             for frame in range(3600):
-                avgx, avgy = self.eyetracker.getLastGazePosition()
+                gpos = self.eyetracker.getLastGazePosition()  
+                if type(gpos) in [tuple, list]:                
+                    avgx, avgy = gpos 
+
+                else:
+                    avgx, avgy = np.nan, np.nan
+                    
                 avgx = avgx/1080
                 avgy = avgy/1080
                 self.gazeDot.pos = (avgx, avgy)
@@ -575,13 +581,17 @@ class ViennaFestival(Experiment):
                     self.flip()
 
         def checkPersistence(cell):
+        
             for frame in range(10):
-                avgx, avgy = self.eyetracker.getLastGazePosition()
-                avgx = avgx/1080
-                avgy = avgy/1080
-                self.gazeDot.pos = (avgx, avgy)
+                gpos = self.eyetracker.getLastGazePosition()
+                if type(gpos) in [tuple, list]:
+                    avgx, avgy = gpos
+                    avgx = avgx/1080
+                    avgy = avgy/1080    
+                    self.gazeDot.pos = (avgx, avgy)
+    
+                # No else needed here cause you only need the else fallback when some later code, outside the if, still needs avgx/avgy to exist (even as a placeholder value like NaN)
 
-                if not np.isnan(avgx) and not np.isnan(avgy):
                     currentCell = getGazeCell(avgx, avgy)
                     self.drawFlip()
                     if cell != currentCell:
@@ -592,11 +602,16 @@ class ViennaFestival(Experiment):
         #kb.clearEvents()
 
         while not found:
-            avgx, avgy = self.eyetracker.getLastGazePosition()
-            avgx = avgx/1080
-            avgy = avgy/1080
+            gpos = self.eyetracker.getLastGazePosition()
+            if type(gpos) in [tuple, list]:
+                avgx, avgy = gpos
+                avgx = avgx/1080
+                avgy = avgy/1080
 
-            self.gazeDot.pos = (avgx, avgy)
+                self.gazeDot.pos = (avgx, avgy)
+
+            else:
+                avgx, avgy = np.nan, np.nan
 
             keys = event.getKeys(['q'])
 
@@ -1000,20 +1015,32 @@ class ViennaFestival(Experiment):
             if 'q' in keys:
                 break
 
-            avgx, avgy = self.eyetracker.getLastGazePosition()
-            avgx = avgx/1080
-            avgy = avgy/1080
+            gpos = self.eyetracker.getLastGazePosition()
+            if type(gpos) in [tuple, list]:
+                avgx, avgy = gpos
+                avgx = avgx/1080
+                avgy = avgy/1080
+            else:
+                avgx, avgy = np.nan, np.nan
 
             if 0.5 < avgx < 8/9 and abs(avgy) < 0.4 and playing:
                 keys = event.getKeys(['q'])
                 for frame in range(durationFixation):
                     if 'q' in keys:
                         break
-                    avgx, avgy = self.eyetracker.getLastGazePosition()
-                    avgx = avgx/1080
-                    avgy = avgy/1080
+                    
+                    gpos = self.eyetracker.getLastGazePosition()
+
+                    if type(gpos) in [tuple, list]:
+                        avgx, avgy = gpos
+                        avgx = avgx/1080
+                        avgy = avgy/1080
+                    else:
+                        avgx, avgy = np.nan, np.nan
+
                     if not (0.5 < avgx < 1 and abs(avgy) < 0.4):
                         break
+
                     if frame == durationFixation - 1:
                         playing = False
                         movie.pause()
@@ -1032,9 +1059,15 @@ class ViennaFestival(Experiment):
                 for frame in range(durationFixation):
                     if 'q' in keys:
                         break
-                    avgx, avgy = self.eyetracker.getLastGazePosition()
-                    avgx = avgx/1080
-                    avgy = avgy/1080
+
+                    gpos = self.eyetracker.getLastGazePosition()
+                    if type(gpos) in [tuple, list]:
+                        avgx, avgy = gpos
+                        avgx = avgx/1080
+                        avgy = avgy/1080
+                    else:
+                        avgx, avgy = np.nan, np.nan
+
                     if not (-8/9 < avgx < -0.5 and abs(avgy) < 0.4):
                         break
 
