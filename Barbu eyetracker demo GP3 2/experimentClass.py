@@ -157,13 +157,13 @@ class Experiment:
 
 
 
-    def getCalibrationImage(self):
-        self.eyetracker.generateCalibrationPlot(self.calibrationFile)
-        stimSize = self.psychopyWindow.size[0]/self.psychopyWindow.size[1]
+    # def getCalibrationImage(self):
+    #     self.eyetracker.generateCalibrationPlot(self.calibrationFile)
+    #     stimSize = self.psychopyWindow.size[0]/self.psychopyWindow.size[1]
 
-        calibration = visual.ImageStim(self.experimenterWindow,
-                                       self.calibrationFile[:-3] + "png",
-                                       size = stimSize,
-                                       interpolate = True)
+    #     calibration = visual.ImageStim(self.experimenterWindow,
+    #                                    self.calibrationFile[:-3] + "png",
+    #                                    size = stimSize,
+    #                                    interpolate = True)
 
-        return calibration
+    #     return calibration
