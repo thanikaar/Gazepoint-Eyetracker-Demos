@@ -137,7 +137,7 @@ class ViennaFestival(Experiment):
 
                 else:
                     avgx, avgy = np.nan, np.nan
-                    
+
                 avgx = avgx/1080
                 avgy = avgy/1080
                 self.gazeDot.pos = (avgx, avgy)
@@ -764,8 +764,8 @@ class ViennaFestival(Experiment):
             # ====================================================================
             # MOVIE
             # ====================================================================
-            if self.eyetracker:
-                self.eyetracker.setCurrentEvent("movie")
+            # if self.eyetracker:                               #TODO FIX
+            #     self.eyetracker.setCurrentEvent("movie")
 
             done = False
 
