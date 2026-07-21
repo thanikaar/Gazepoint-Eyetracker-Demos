@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+# "Experiment" class: eyetracker setup + calibration
+
+
 """
 Created on Thu Oct 14 15:50:36 2021
 Updated on Tue Apr 14 2026
@@ -26,18 +30,20 @@ class Experiment:
         if usingEyetracker:
             self.usingEyetracker = True
 
-            io=launchHubServer(iohub_config_name='iohub_config.yaml') # you are reliant on an external .yaml file.
+            # iohub_config.yaml Declares the monitor, keyboard, mouse — and critically, the eyetracker.hw.gazepoint.gp3.EyeTracker block (enable: True), which is the one active tracker definition (other trackers like SMI/LC Technologies are commented out). This file is what makes launchHubServer actually talk to your specific GP3 device.
+
+            self.io=launchHubServer(iohub_config_name='iohub_config.yaml') # you are reliant on an external .yaml file.
             #This .yaml file contains information about both the monitor and the eye-tracker. The program will not work without it, and it must be named exactly this.
             #This is the only way to get it to present everything on the correct monitor: in the config file, make sure under "Display", device_number is set to 1
 
-            display=io.devices.display
-            self.eyetracker=io.devices.tracker
+            display=self.io.devices.display
+            self.eyetracker=self.io.devices.tracker
             #print tracker
             if self.eyetracker.isConnected():
                 print('connected, whatever else happens')
             else:
                 print('failed to establish connection, stopping')
-                io.quit()
+                self.io.quit()
                 quit()
             #self.eyetracker = tobiiClass.tobii(self.psychopyWindow)
             self.calibrationAttempt = 1
@@ -61,10 +67,10 @@ class Experiment:
         try:
             calib = self.eyetracker.runSetupProcedure()
             if calib == False:
-                io.quit()
+                self.io.quit()
                 quit()
         except:
-            io.quit()
+            self.io.quit()
             core.quit()
             quit()
         core.wait(.2)
