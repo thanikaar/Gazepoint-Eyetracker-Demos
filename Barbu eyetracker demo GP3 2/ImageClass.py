@@ -713,9 +713,38 @@ class ViennaFestival(Experiment):
         kb = keyboard.Keyboard()
         #kb.clearEvents()
 
+
         # Datafiles to write to
-        dateTime = str(datetime.datetime.now())[:10] + "_" + str(datetime.datetime.now())[11:13] + "." + str(datetime.datetime.now())[14:16]
-        experimentFile = os.path.join("Data", "S1" + "_" + dateTime + "_eyeData.csv")
+
+        # pretty sure this doesn't work
+
+        # dateTime = str(datetime.datetime.now())[:10] + "_" + str(datetime.datetime.now())[11:13] + "." + str(datetime.datetime.now())[14:16]
+        # experimentFile = os.path.join("Data", "S1" + "_" + dateTime + "_eyeData.csv")
+
+        def gazeEventToRow(evt, trialNumber, eventLabel):
+                lx = evt.left_gaze_x
+                ly = evt.left_gaze_y
+                rx = evt.right_gaze_x
+                ry = evt.right_gaze_y
+
+                # 1. figure out lv/rv (1 if not NaN, else 0)
+                if not np.isnan(lx):
+                    lv = 1
+                else:
+                    lv = 0
+                if not np.isnan(rx):
+                    rv = 1
+                else:
+                    rv = 0
+                # 2. convert lx, ly, rx, ry into height-units (divide by 1080, same as everywhere else)           
+                lx = lx/1080
+                ly = ly/1080
+                rx = rx/1080
+                ry = ry/1080
+                # 3. return a dict with keys: trialNumber, event, lv, rv, lx, ly, rx, ry
+                row_dict = {'trialNumber':trialNumber, 'event':eventLabel, 'lv':lv, 'rv':rv, 'lx':lx, 'ly':ly, 'rx':rx, 'ry':ry}
+
+                return row_dict
 
         # Start eyetracker
         if self.eyetracker:
@@ -734,6 +763,7 @@ class ViennaFestival(Experiment):
         movie3 = visual.MovieStim(self.psychopyWindow,
                                  self.movieFolder + 'test2.mov',
                                  size = (1920, 1080))
+        collecting_data = []
 
         # For-loop for all trials
         for trialNumber in range(1, 4):
@@ -789,6 +819,9 @@ class ViennaFestival(Experiment):
             movie.pause()
 
             # Write data at the end of the trial
+
+            # this is the tobii version
+
             #if self.eyetracker:
                 #self.eyetracker.setCurrentEvent("endTrial")
                 #self.eyetracker.writeToFile(experimentFile, 1,1,trialNumber)
@@ -796,6 +829,8 @@ class ViennaFestival(Experiment):
                 #self.eyetracker.updateSystemTimestamp()
                 #self.eyetracker.clearGazeData()
 
+
+            
             self.items.remove(movie)
 
         if self.eyetracker:
